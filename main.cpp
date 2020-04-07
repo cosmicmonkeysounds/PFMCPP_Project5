@@ -291,7 +291,9 @@ SingleVoiceSynth::~SingleVoiceSynth()
  */
 struct StateVariableFilter
 {
-    Filter lp = Filter(true, false, false), bp = Filter(false, true, false), hp = Filter(false, false, true);
+    Filter lp { true, false, false }, 
+    bp { false, true, false }, 
+    hp { false, false, true };
 
     void sweepAll();
 
