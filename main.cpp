@@ -257,7 +257,22 @@ void Filter::filterSweep(float low, float high)
 
 Filter::~Filter()
 {
-    std::cout << "Destroying a " << (isLowPass ? "low pass" : (isBandPass ? "band pass" : (isHighPass ? "high pass" : ""))) << " filter with cutoff freq of " << cutoffFreq << " and Q of " << resonance << std::endl;
+    std::string str = "Destryoing a ";
+
+    if( isLowPass )
+    {
+        str += "low pass";
+    }
+    if( isBandPass )
+    {
+        str += "band pass";
+    }
+    if( isHighPass )
+    {
+        str += "high pass";
+    }
+
+    std::cout << str << " filter with cutoff freq of " << cutoffFreq << " and Q of " << resonance << std::endl;
 }
 
 /*
