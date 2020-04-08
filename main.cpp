@@ -263,11 +263,11 @@ Filter::~Filter()
     {
         str += "low pass";
     }
-    if( isBandPass )
+    else if( isBandPass )
     {
         str += "band pass";
     }
-    if( isHighPass )
+    else
     {
         str += "high pass";
     }
