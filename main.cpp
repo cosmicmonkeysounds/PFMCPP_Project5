@@ -1,37 +1,43 @@
 /*
-Project 5: Part 2 / 4
- video: Chapter 3 Part 1
+ Project 5: Part 3 / 4
+ video: Chapter 3 Part 4: 
 
-Create a branch named Part2
+Create a branch named Part3
 
- The 'this' keyword
+ the 'new' keyword
+
+ 1) add #include "LeakedObjectDetector.h" to main
  
- The purpose of this project part is to show you how accessing member variables of objects INSIDE member functions is very similar to accessing member variables of objects OUTSIDE of member functions, via 'this->' and via the '.' operator.
- This project part will break the D.R.Y. rule, but that is fine for the purpose of this project part.
+ 3) Add 'JUCE_LEAK_DETECTOR(OwnerClass)' at the end of your UDTs.
  
+ 4) write the name of your class where it says "OwnerClass"
  
- 1) if you don't have any std::cout statements in main() that access member variables of your U.D.Ts
-         write some.
-    You can copy some from your Project3's main() if needed.
+ 5) write wrapper classes for each type similar to how it was shown in the video
  
- 2) For each std::cout statement in main() that accessed member variables of your types or printed out the results of your member function calls,
-        a) write a member function that prints the same thing out, but uses the proper techniques inside the member functions to access the same member variables/functions.
-        b) be explicit with your use of 'this->' in those member functions so we see how you're accessing/calling those member variables and functions *inside*
-        c) call that member function after your std::cout statement in main.
-        d) you should see 2 (almost) identical messages in the program output for each member function you add:
-            one for the std::cout line, and one for the member function's output
+ 7) update main to use your wrapper classes, which have your UDTs as pointer member variables.
  
- 
- 3) After you finish, click the [run] button.  Clear up any errors or warnings as best you can.
+ 8) After you finish, click the [run] button.  Clear up any errors or warnings as best you can.
  
  Commit your changes by clicking on the Source Control panel on the left, entering a message, and click [Commit and push].
- 
+
 Make a pull request after you make your first commit and pin the pull request link to our DM thread.
 
 send me a DM to check your pull request
 
  Wait for my code review.
+ 
+ see here for an example: https://repl.it/@matkatmusic/ch3p04example
  */
+
+
+
+
+
+
+
+
+
+
 
 /*
  example:
