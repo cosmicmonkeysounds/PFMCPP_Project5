@@ -93,8 +93,8 @@ struct Oscillator
 
     Oscillator(unsigned int voices = 2, bool fm = false)
     {
-        FMEnable = fm;
-        numOfVoices = voices;
+        this->FMEnable = fm;
+        this->numOfVoices = voices;
     }
 
     ~Oscillator()
@@ -112,8 +112,8 @@ void Oscillator::sweepFrequency()
 {
     for ( float i = minFreq; i <= maxFreq; i += 1.f )
     {
-        frequency = i;
-        outputSound();
+        this->frequency = i;
+        this->outputSound();
     }
 }
 
@@ -177,17 +177,17 @@ struct VCA
 
     VCA(float clip = 60.5f)
     {
-        clipThresh = clip;
+        this->clipThresh = clip;
     }
 
     ~VCA()
     {
-        std::cout << "Destructing VCA with gain of " << currentGain << std::endl;
+        std::cout << "Destructing VCA with gain of " << this->currentGain << std::endl;
     }
 
     void printStuff()
     {
-        std::cout << "Currently at " << currentGain << " dB of gain" << std::endl;
+        std::cout << "Gain before clipping VCA with current signal: " << this->gainBeforeClipping() << "dB" << std::endl;
     }
 };
 
@@ -252,7 +252,7 @@ struct Filter
 
     void printStuff()
     {
-        std::cout << "A " << (isLowPass ? "low pass" : "") << (isBandPass ? "bandpass" : "") << (isHighPass ? "highpass" : "") << " filter" << std::endl;
+        std::cout << "Low pass transfer function outputing: " << this->lowPass.transferFunction(1.f) << std::endl;
     }
 
     ~Filter();
@@ -364,13 +364,17 @@ int main()
     osc.sweepFrequency();
 
     VCA vca(40.f);
+
     vca.printStuff();
     std::cout << "Gain before clipping VCA with current signal: " << vca.gainBeforeClipping() << "dB" << std::endl;
 
     Filter filter(true, false, false);
-    filter.printStuff();
     filter.filterSweep(440.f, 12000.f);
+
     std::cout << "Low pass transfer function outputing: " << filter.lowPass.transferFunction(1.f) << std::endl;
+    
+    filter.printStuff();
+
 
     SingleVoiceSynth synth;
 
