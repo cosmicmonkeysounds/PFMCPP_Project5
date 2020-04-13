@@ -43,6 +43,8 @@ send me a DM to check your pull request
  example:
  */
 #include <iostream>
+#include "LeakedObjectDetector.h"
+
 namespace Example
 {
     //a User-Defined Type
@@ -112,6 +114,8 @@ struct Oscillator
     {
         std::cout << "A " << numOfVoices << " voice " << (FMEnable ? "FM " : "") << "oscillator" << std::endl; 
     } 
+
+    JUCE_LEAK_DETECTOR(Oscillator)
 };
 
 void Oscillator::sweepFrequency()
@@ -166,6 +170,13 @@ void Oscillator::outputSound()
     */
 }
 
+struct OscillatorWrapper
+{
+    Oscillator* osc = nullptr;
+    OscillatorWrapper( Oscillator* _osc ) : osc(_osc) {}
+    ~OscillatorWrapper(){ delete osc; }
+};
+
 /*
  copied UDT 2:
  */
@@ -195,6 +206,8 @@ struct VCA
     {
         std::cout << "Gain before clipping VCA with current signal: " << this->gainBeforeClipping() << "dB" << std::endl;
     }
+
+    JUCE_LEAK_DETECTOR(VCA)
 };
 
 void VCA::saturate(float clipAmount)
@@ -229,6 +242,13 @@ float VCA::gainBeforeClipping()
     return gain;
 }
 
+struct VCAWrapper
+{
+    VCA* vca = nullptr;
+    VCAWrapper( VCA* _vca ) : vca(_vca) {}
+    ~VCAWrapper(){ delete vca; }
+};
+
 /*
  copied UDT 3:
  */
@@ -262,6 +282,9 @@ struct Filter
     }
 
     ~Filter();
+
+
+    JUCE_LEAK_DETECTOR(Filter)
 };
 
 float Filter::LowPass::transferFunction(float input)
@@ -308,6 +331,13 @@ Filter::~Filter()
     std::cout << str << " filter with cutoff freq of " << cutoffFreq << " and Q of " << resonance << std::endl;
 }
 
+struct FilterWrapper
+{
+    Filter* filter = nullptr;
+    FilterWrapper( Filter* _f ) : filter(_f) {}
+    ~FilterWrapper(){ delete filter; }
+};
+
 /*
  new UDT 4:
  */
@@ -320,6 +350,9 @@ struct SingleVoiceSynth
 
     void noiseSequence();
     ~SingleVoiceSynth();
+
+
+    JUCE_LEAK_DETECTOR(SingleVoiceSynth)
 };
 
 void SingleVoiceSynth::noiseSequence()
@@ -333,6 +366,13 @@ SingleVoiceSynth::~SingleVoiceSynth()
     noiseSequence();
     std::cout << "Destroying the synth..." << std::endl;
 }
+
+struct SingleVoiceSynthWrapper
+{
+    SingleVoiceSynth* synth = nullptr;
+    SingleVoiceSynthWrapper( SingleVoiceSynth* _sy ) : synth(_sy) {}
+    ~SingleVoiceSynthWrapper(){ delete synth; }
+};
 
 /*
  new UDT 5:
@@ -350,6 +390,9 @@ struct StateVariableFilter
         std::cout << "Say goodbye to your filters!" << std::endl;
     }
 
+
+    JUCE_LEAK_DETECTOR(StateVariableFilter)
+
 };
 
 void StateVariableFilter::sweepAll()
@@ -359,32 +402,36 @@ void StateVariableFilter::sweepAll()
     hp.filterSweep(40.f, 20000.f);
 }
 
+struct StateVariableFilterWrapper
+{
+    StateVariableFilter* svf = nullptr;
+    StateVariableFilterWrapper( StateVariableFilter* _svf ) : svf(_svf) {}
+    ~StateVariableFilterWrapper(){ delete svf; }
+};
+
 int main()
 {
     std::cout << "good to go!" << std::endl;
 
     std::cout << std::endl << "Contructor Calls and Member Function Printing: " << std::endl << std::endl;
     
-    Oscillator osc(4, true);
-    osc.printStuff();
-    osc.sweepFrequency();
+    OscillatorWrapper oscWrap( new Oscillator(4, true) );
+    oscWrap.osc->printStuff();
+    oscWrap.osc->sweepFrequency();
 
-    VCA vca(40.f);
+    VCAWrapper vcaWrap( new VCA(40.f) );
+    vcaWrap.vca->printStuff();
+    std::cout << "Gain before clipping VCA with current signal: " << vcaWrap.vca->gainBeforeClipping() << "dB" << std::endl;
 
-    vca.printStuff();
-    std::cout << "Gain before clipping VCA with current signal: " << vca.gainBeforeClipping() << "dB" << std::endl;
-
-    Filter filter(true, false, false);
-    filter.filterSweep(440.f, 12000.f);
-
-    std::cout << "Low pass transfer function outputing: " << filter.lowPass.transferFunction(1.f) << std::endl;
-    
-    filter.printStuff();
+    FilterWrapper filterWrap( new Filter(true, false, false) );
+    filterWrap.filter->filterSweep(440.f, 12000.f);
+    std::cout << "Low pass transfer function outputing: " << filterWrap.filter->lowPass.transferFunction(1.f) << std::endl;
+    filterWrap.filter->printStuff();
 
 
-    SingleVoiceSynth synth;
+    SingleVoiceSynthWrapper synthWrap( new SingleVoiceSynth() );
 
-    StateVariableFilter svf;
+    StateVariableFilterWrapper svfWrap( new StateVariableFilter() );
 
     std::cout << std::endl << "Destructor Calls: " << std::endl << std::endl;
 }
